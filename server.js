@@ -12,6 +12,10 @@ const { addUser, getUser, deleteUser, getUsers } = require('./users')
 app.use(cors())
 app.use(express.static(path.join(__dirname, 'client/build')));
 
+io.adapter(redisAdapter({
+    host: 'ec2-54-208-89-233.compute-1.amazonaws.com',
+    port: 11039
+}));
 
 io.on('connection', (socket) => {
     socket.on('login', ({ name, room }, callback) => {

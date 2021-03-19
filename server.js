@@ -2,6 +2,7 @@ const express = require('express')
 const app = express();
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
+const redisAdapter = require('socket.io-redis');
 const cors = require('cors')
 const path = require('path')
 const PORT = process.env.PORT || 80
@@ -9,9 +10,7 @@ const { addUser, getUser, deleteUser, getUsers } = require('./users')
 
 
 app.use(cors())
-
 app.use(express.static(path.join(__dirname, 'client/build')));
-
 
 
 io.on('connection', (socket) => {

@@ -9,7 +9,7 @@ const SocketProvider = ({ children }) => {
     if(!process.env.NODE_ENV || process.env.NODE_ENV === "development"){
         ENDPOINT = "http://localhost";
     } else {
-        ENDPOINT = 'https://socket-chat-ak.herokuapp.com/';
+        ENDPOINT = 'https://skywriterchat.herokuapp.com/';
     }
     const socket = io(ENDPOINT, { transports: ['websocket', 'polling'] })
     return (

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { MainContext } from '../../mainContext'
 import { SocketContext } from '../../socketContext'
 import { Box, Flex, Heading, IconButton, Text, Menu, Button, MenuButton, MenuList, MenuItem } from "@chakra-ui/react"
@@ -65,7 +65,7 @@ const Chat = () => {
                                 users && users.map(user => {
                                     return (
                                         <MenuItem minH='40px' key={user.id}>
-                                            <Text fontSize='sm'>{user.name}</Text>
+                                            <Text fontSize='sm'>{user.name} &nbsp;&nbsp;&nbsp; <Link to={`/messages/${user.id}`}>Message</Link></Text>
                                         </MenuItem>
                                     )
                                 })

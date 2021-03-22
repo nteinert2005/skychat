@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Login from './components/Login/Login'
 import Chat from './components/Chat/Chat'
+import Messages from './components/Messages/Messages'
 import { SocketProvider } from './socketContext'
 import { MainProvider } from './mainContext'
 import './App.css'
@@ -18,6 +19,7 @@ function App() {
               <Router>
                 <Switch>
                   <Route exact path='/' component={Login} />
+                  <Route path="/messages/:id" component={Messages} />
                   <Route path='/chat' component={Chat} />
                   <Route component={DefaultPage} />
                 </Switch>

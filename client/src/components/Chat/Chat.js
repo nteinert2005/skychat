@@ -7,7 +7,7 @@ import { FiList } from 'react-icons/fi'
 import { BiMessageDetail } from 'react-icons/bi'
 import { RiSendPlaneFill } from 'react-icons/ri'
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { useToast } from "@chakra-ui/react"
+import { useToast, Badge } from "@chakra-ui/react"
 import './Chat.scss'
 import { UsersContext } from '../../usersContext'
 
@@ -28,6 +28,18 @@ const Chat = () => {
     useEffect(() => {
         socket.on("message", msg => {
             setMessages(messages => [...messages, msg]);
+        })
+
+
+        socket.on('private-message-arrived', data => {
+            toast({
+                position: "bottom-left",
+                title: "Private Message from "+data.from,
+                description: data.msg, 
+                status: "info",
+                duration: 5000,
+                isClosable: true
+            })
         })
 
         socket.on("notification", notif => {
@@ -65,7 +77,7 @@ const Chat = () => {
                                 users && users.map(user => {
                                     return (
                                         <MenuItem minH='40px' key={user.id}>
-                                            <Text fontSize='sm'>{user.name} &nbsp;&nbsp;&nbsp; <Link to={`/messages/${user.id}`}>Message</Link></Text>
+                                            <Text style={{width: "100%"}} fontSize='sm'>{user.name} <Badge variant="solid" colorScheme="green" style={{align: "right"}}>1</Badge>  </Text>
                                         </MenuItem>
                                     )
                                 })

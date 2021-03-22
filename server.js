@@ -35,7 +35,7 @@ function log_me(msg){
 
 io.on('connection', (socket) => {
     socket.on('login', ({ name, room }, callback) => {
-        log_me("joined_channel: "+room);
+        console.log("user connected to room: "+room);
         const { user, error } = addUser(socket.id, name, room)
         if (error) return callback(error)
         socket.join(user.room)
@@ -46,7 +46,38 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', message => {
         const user = getUser(socket.id)
-        io.in(user.room).emit('message', { user: user.name, text: message });
+
+        var privateTest = message.includes("@");
+        if(privateTest == false){
+            io.in(user.room).emit('message', { user: user.name, text: message });
+        } else {
+            var origMessage = message;
+            var userParts = message.split(' ');
+            
+            // userTo = person you are sending it to
+            var userTo = userParts[0];
+            userTo = userTo.split('@')[1];
+
+            //userDM is the message you are sending
+            var userDM = "";
+            for(var i = 1; i< userParts.length; i++){
+                userDM += userParts[i]+" ";
+            }
+
+            // find the user -> socket
+            var tempUsers = getUsers(user.room);
+            console.log(tempUsers);
+            for(var i=0; i<tempUsers.length; i++){
+                console.log(tempUsers[i]);
+                if(tempUsers[i].name === userTo){
+                    io.to(tempUsers[i].id).emit('private-message-arrived', {
+                        from: user.name,
+                        msg: userDM
+                    });
+                }
+            }
+            
+        }
     })
 
     socket.on("disconnect", () => {
@@ -60,6 +91,7 @@ io.on('connection', (socket) => {
 })
 
 app.get('/', (req, res) => {
+    console.log('Im not the easter bunny');
     res.sendFile(path.join(__dirname+"/client/build/index.html"))
 })
 

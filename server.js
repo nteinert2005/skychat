@@ -7,7 +7,7 @@ const redisAdapter = require('socket.io-redis');
 const cors = require('cors')
 const path = require('path')
 const PORT = process.env.PORT || 80
-const { addUser, getUser, deleteUser, getUsers } = require('./users')
+const { addUser, getUser, deleteUser, getUsers } = require('./users');
 
 
 const REDIS_PORT = 11039;
@@ -25,8 +25,17 @@ io.adapter(redisAdapter({
     pubClient, subClient
 }))
 
+
+function log_me(msg){
+    var ts = new Date(new Date().getTime() - (3600000*4));
+    var tss = ts.toString();
+    tss = tss.substring(0, tss.indexOf(' GMT'));
+    console.log(tss+": "+msg);
+}
+
 io.on('connection', (socket) => {
     socket.on('login', ({ name, room }, callback) => {
+        log_me("joined_channel: "+room);
         const { user, error } = addUser(socket.id, name, room)
         if (error) return callback(error)
         socket.join(user.room)
@@ -41,7 +50,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on("disconnect", () => {
-        console.log("User disconnected");
+        log_me("disconnect: "+socket.id);
         const user = deleteUser(socket.id)
         if (user) {
             io.in(user.room).emit('notification', { title: 'Someone just left', description: `${user.name} just left the room` })

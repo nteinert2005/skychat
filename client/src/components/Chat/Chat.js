@@ -42,6 +42,29 @@ const Chat = () => {
             })
         })
 
+
+        socket.on('joinSecond_accept', (roomname) => {
+            toast({
+                position: "top",
+                title: "Added to Room",
+                description: "Successfully added to "+roomname,
+                status: "success",
+                duration: 5000,
+                isClosable: true 
+            })
+        })
+
+        socket.on('no-found-user', () => {
+            toast({
+                position: "bottom-left",
+                title: "No User Found",
+                description: "User wasn't reachable",
+                status: "error",
+                duration: 5000,
+                isClosable: true
+            })
+        })
+
         socket.on("notification", notif => {
             toast({
                 position: "top",
@@ -58,6 +81,12 @@ const Chat = () => {
     const handleSendMessage = () => {
         socket.emit('sendMessage', message, () => setMessage(''))
         setMessage('')
+    }
+
+    const joinSecond = (event) => {
+        console.log('joined second btn pressed')
+        //var name1 = event.target.value;
+        socket.emit('joinSecond_invite', null);
     }
 
     const logout = () => {
@@ -88,6 +117,7 @@ const Chat = () => {
                         <Heading fontSize='lg'> {room.slice(0, 1).toUpperCase() + room.slice(1)}</Heading>
                         <Flex alignItems='center'><Text mr='1' fontWeight='400' fontSize='md' opacity='.7' letterSpacing='0' >{name}</Text><Box h={2} w={2} borderRadius='100px' bg='green.300'></Box></Flex>
                     </Flex>
+                    <Button style={{marginRight: "10px"}} color="green.500" fontSize="sm" value="testing" onClick={e=> joinSecond(e.target.value)}> Join Another </Button>
                     <Button color='gray.500' fontSize='sm' onClick={logout}  >Logout</Button>
                 </Flex>
             </Heading>
@@ -97,7 +127,7 @@ const Chat = () => {
                 {messages.length > 0 ?
                     messages.map((msg, i) =>
                     (<Box key={i} className={`message ${msg.user === name ? "my-message" : ""}`} m=".2rem 0">
-                        <Text fontSize='xs' opacity='.7' ml='5px' className='user'>{msg.user}</Text>
+                        <Text fontSize='xs' opacity='.7' ml='5px' className='user'>{msg.user} from {msg.room}</Text>
                         <Text fontSize='sm' className='msg' p=".4rem .8rem" bg='white' borderRadius='15px' color='white'>{msg.text}</Text>
                     </Box>)
                     )

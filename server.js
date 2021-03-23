@@ -40,6 +40,7 @@ io.on('connection', (socket) => {
         if (error) return callback(error)
         socket.join(user.room)
         socket.in(room).emit('notification', { title: 'Someone\'s here', description: `${user.name} just entered the room` })
+        //console.log(getUsers(room));
         io.in(room).emit('users', getUsers(room))
         callback()
     })
@@ -49,7 +50,12 @@ io.on('connection', (socket) => {
 
         var privateTest = message.includes("@");
         if(privateTest == false){
-            io.in(user.room).emit('message', { user: user.name, text: message });
+            socket.to("Team 1").to("Team 2").emit('message', {
+                user: user.name, 
+                text: message, 
+                room: user.room
+            });
+            //io.in(user.room).emit('message', { user: user.name, text: message, room: user.room });
         } else {
             var origMessage = message;
             var userParts = message.split(' ');
@@ -66,6 +72,7 @@ io.on('connection', (socket) => {
 
             // find the user -> socket
             var tempUsers = getUsers(user.room);
+            var userFound = false;
             console.log(tempUsers);
             for(var i=0; i<tempUsers.length; i++){
                 console.log(tempUsers[i]);
@@ -74,10 +81,26 @@ io.on('connection', (socket) => {
                         from: user.name,
                         msg: userDM
                     });
+                    userFound = true;
                 }
+            }
+
+            if(userFound == false){
+                io.to(user.id).emit('no-found-user', null);
             }
             
         }
+    })
+
+    socket.on('joinSecond_invite', () => {
+        var user = getUser(socket.id);
+        var tempRoom = "Team 2";
+        log_me("joinSecond invite: "+ user.name);
+        socket.join(tempRoom);
+        socket.in(tempRoom).emit('notification', { title: 'Someone\'s here', description: `${user.name} just entered the room` })
+        io.in(tempRoom).emit('users', getUsers(user.room))
+        log_me("joinSecond_success: added to Team 2");
+        socket.emit("joinSecond_accept", "Team 2");
     })
 
     socket.on("disconnect", () => {

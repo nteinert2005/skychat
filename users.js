@@ -1,5 +1,19 @@
 const users = []
 
+
+/*
+    users = [
+        {
+            id: 'jalksdjlk2w342",
+            name: "sky1",
+            room: [
+                "Team 1",
+                "General"
+            ]
+        }
+    ]
+*/
+
 const addUser = (id, name, room) => {
     const existingUser = users.find(user => user.name.trim().toLowerCase() === name.trim().toLowerCase())
 

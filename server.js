@@ -1,3 +1,11 @@
+/*
+
+    Build: STABLE
+    Date: 03/22/2020
+    Features: Multiserver, team assignments, and socket.io-redis working and configured. 
+
+*/
+
 const express = require('express')
 const app = express();
 const http = require('http').createServer(app)

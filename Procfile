@@ -1,1 +1,1 @@
-web: pm2 start server.js -i 2 && pm2 logs --all
+web: pm2 start server.js -i 2 && pm2 logs all

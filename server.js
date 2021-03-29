@@ -123,7 +123,7 @@ io.on('connection', (socket) => {
 
 app.get('/', (req, res) => {
     console.log('Im not the easter bunny');
-    res.sendFile(path.join(__dirname+"/client/build/index.html"))
+    res.sendFile(path.join(__dirname+"/client1/build/index.html"))
 })
 
 http.listen(PORT, () => {

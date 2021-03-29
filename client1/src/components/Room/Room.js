@@ -51,7 +51,7 @@ const Room = () => {
                     <ListGroup.Item>
                         <Row>
                             <Col xs={1}>
-                                <img src="https://cdn4.iconfinder.com/data/icons/avatars-21/512/avatar-circle-human-male-black-7-512.png" />
+                                <img src="https://cdn1.iconfinder.com/data/icons/avengers-1/512/avangers_icon003-512.png" />
                             </Col>
                             <Col xs={11} style={{marginLeft: "-30px" }}>
                                 <span style={{width: "80%", display: "block"}}> Test User </span> 
@@ -66,7 +66,7 @@ const Room = () => {
                     <ListGroup.Item>
                         <Row>
                             <Col xs={1}>
-                                <img src="https://cdn4.iconfinder.com/data/icons/avatars-21/512/avatar-circle-human-male-black-7-512.png" />
+                                <img src="https://cdn1.iconfinder.com/data/icons/avengers-1/512/avangers_icon003-512.png" />
                             </Col>
                             <Col xs={11} style={{marginLeft: "-30px" }}>
                                 <span style={{width: "80%", display: "block"}}> Test User </span> 

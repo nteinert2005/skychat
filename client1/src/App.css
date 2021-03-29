@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+body {
+  background: #313131 !important;
+  color: white !important;
+  font-family: 'Roboto';
+}
+
+.login {
+  background-image: url('https://images.unsplash.com/photo-1507961455425-0caef37ef6fe?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8c2t5bGluZXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80');
+  background-size: cover;
+  height: 100vh;
+}
+
+.loginBox {
+  background: #141419;
+  opacity: .9;
+  padding: 3em;
+  border-radius: 20px;
+  margin-top: 200px;
+  display: inline-block;
+  width: 50%;
+  margin-left: 25%;
+}
+
+
+h1 {
+  width: 100%;
+  display: block;
+}
+
+form {
+  width: 100% !important;
+}
+
+.col-lg-1 {
+  padding: 0 !important; 
+  margin: 0 !important;
+}
+
+.navbar-new a {
+  color: white;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.navbar-new {
+  min-height: 100vh;
+  height: auto;
+  background: #141419;
+
+}
+
+.activeusers {
+  min-height: 100vh;
+  padding-right: 2em;
+  background: #0F0F13;
+  padding-top: 1em;
+  padding-left: 2em;
+}
+
+.activeusers ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activeusers li {
+  padding: .25em;
+}
+
+.chat {
+  background: #222429;
+  padding-top: 1.5em;
+  padding-left: 2em;
+}
+
+.favorite {
+  background: #27272B;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: .5em;
+}
+
+.room-bar a {
+  color: #6B6C6F;
+  padding-top: 1em;
+}
+
+.chat .list-group-item {
+  color: white;
+  background: #222429 ;
+  border: none;
+  margin-bottom: 0px;
+  
+}
+
+.chat .list-group-item:first-child {
+  margin-top: 20px;
+}
+
+.chat .list-group-item img {
+  width: 45px;
+  margin-right: 10px;
+}
+
+.chat .chat-msg {
+  margin-top: 1em;
+  margin-left: 0px;
+  border-bottom: 1px solid grey;
+}
+
+.chat hr {
+  border: 1px solid #6B6C6F;
+  margin-top: 0px;
+}

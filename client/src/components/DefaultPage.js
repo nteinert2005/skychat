@@ -7,7 +7,7 @@ export default function DefaultPage() {
     const redirect = () => history.push('/')
     return (
         <div>
-            <IconButton mr={2} isRound='true' bg='green.300' color='white' icon={<BiArrowBack />} onClick={redirect} /> You're lost. Go home.
+            Go Home. 
         </div>
     )
 }

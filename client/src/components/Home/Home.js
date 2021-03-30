@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { MainContext } from '../../../../client1/src/mainContext'
+import { MainContext } from '../../mainContext'
 import { SocketContext } from '../../socketContext'
 import { UsersContext } from '../../usersContext'
 import userRooms from '../../userRooms';

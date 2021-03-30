@@ -14,7 +14,14 @@ export default class GroupList extends Component {
     }
 
     getUsers(){
-        axios.get(process.env.SERVER+"/api/getUsers").then(res => {
+        let requestURL;
+        if(process.env.NODE_ENV != 'production'){
+            requestURL = "http://localhost:5151"
+        } else {
+            requestURL = "http://skywriterchat.herokuapp.com"
+        }
+        
+        axios.get(requestURL+"/api/getUsers").then(res => {
             var data = res.data;
             //console.log(data);
             this.setState({

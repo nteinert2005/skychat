@@ -14,11 +14,6 @@ import { UsersProvider } from './usersContext'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 
-if(process.env.NODE_ENV != 'production'){
-  process.env.SERVER = "http://localhost:5151"
-} else {
-  process.env.SERVER = "http://skywriterapp.herokuapp.com"
-}
 
 function App() {
   return (

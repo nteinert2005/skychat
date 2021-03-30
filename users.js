@@ -1,5 +1,4 @@
-const users = []
-
+const CONNECTED_USERS = []
 
 /*
     users = [
@@ -14,8 +13,13 @@ const users = []
     ]
 */
 
+const displayUsers = () => {
+    console.log(CONNECTED_USERS);
+}
+
+
 const addUser = (id, name, room) => {
-    const existingUser = users.find(user => user.name.trim().toLowerCase() === name.trim().toLowerCase())
+    const existingUser = CONNECTED_USERS.find(user => CONNECTED_USERS.name === name)
 
     if (existingUser) return { error: "Username has already been taken" }
     if (!name && !room) return { error: "Username and room are required" }
@@ -23,20 +27,26 @@ const addUser = (id, name, room) => {
     if (!room) return { error: "Room is required" }
 
     const user = { id, name, room }
-    users.push(user)
+    CONNECTED_USERS.push(user)
+    displayUsers();
     return { user }
 }
 
 const getUser = id => {
-    let user = users.find(user => user.id == id)
+    let user = CONNECTED_USERS.find(user => user.id == id)
     return user
 }
 
 const deleteUser = (id) => {
-    const index = users.findIndex((user) => user.id === id);
-    if (index !== -1) return users.splice(index, 1)[0];
+    const index = CONNECTED_USERS.findIndex((user) => user.id === id);
+    if (index !== -1) return CONNECTED_USERS.splice(index, 1)[0];
 }
 
-const getUsers = (room) => users.filter(user => user.room === room)
+const getAllUsers = () => {
+    const users = CONNECTED_USERS;
+    return users;
+}
 
-module.exports = { addUser, getUser, deleteUser, getUsers }
+const getUsers = (room) => CONNECTED_USERS.filter(user => user.room === room)
+
+module.exports = { addUser, getUser, deleteUser, getUsers, getAllUsers }

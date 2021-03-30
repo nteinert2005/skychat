@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+
+
+import DirectMessageList from '../DirectMessage/DirectMessage';
+import GroupList from '../GroupList/GroupList';
 
 import { Container, Form, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 
 const ActiveUsers = () => {
+    const directMessages = null;
+
+    let displayDirectMessage;
+    if(directMessages === null){
+        displayDirectMessage = "No Direct Messages";
+    } else {
+        displayDirectMessage = <DirectMessageList />;
+    }
+
+
     return(
         <>
                 <Form>
@@ -22,25 +36,10 @@ const ActiveUsers = () => {
                     </li>
                 </ul>
                 <h5 style={{display: "block", marginTop: '1em'}} className="text-muted">Direct Messages</h5>
-                <ul>
-                    <li> <Icon.PersonCircle /> Test User </li>
-                    <li>  <Icon.PersonCircle /> Test User </li>
-                    <li>  <Icon.PersonCircle /> Test User </li>
-                    <li>  <Icon.PersonCircle /> Test User </li>
-                    <li>  <Icon.PersonCircle /> Test User </li>
-                    <li>  <Icon.PersonCircle /> Test User </li>
-                    <li>  <Icon.PersonCircle /> Test User </li>
-                    <li>  <Icon.PersonCircle /> Test User </li>
-                    <li>  <Icon.PersonCircle /> Test User </li>
-                </ul>
-                <h5 style={{paddingTop: "1em", display: "block"}} className="text-muted">Groups</h5>
-                <ul>
-                    <li> <Icon.Hash /> Team 1 </li>
-                    <li> <Icon.Hash /> Team 1 </li>
-                    <li> <Icon.Hash /> Team 1 </li>
-                    <li> <Icon.Hash /> Team 1 </li>
-                    <li> <Icon.Hash /> Team 1 </li>
-                </ul>
+                { displayDirectMessage }
+                <h5 style={{paddingTop: "1em", display: "block"}} className="text-muted">Active Users</h5>
+                <GroupList />
+
         </>
     )
 }

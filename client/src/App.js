@@ -1,28 +1,39 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+
+// Components 
 import Login from './components/Login/Login'
 import Chat from './components/Chat/Chat'
-import Messages from './components/Messages/Messages'
+import Home from './components/Home/Home';
+
+// Providers 
 import { SocketProvider } from './socketContext'
-import { MainProvider } from './mainContext'
-import './App.css'
+import { MainProvider } from '../../client1/src/mainContext'
 import { UsersProvider } from './usersContext'
-import DefaultPage from './components/DefaultPage'
+
+// Styles 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css'
+
+if(process.env.NODE_ENV != 'production'){
+  process.env.SERVER = "http://localhost:80"
+} else {
+  process.env.SERVER = "http://skywriterapp.herokuapp.com"
+}
 
 function App() {
   return (
       <MainProvider>
         <UsersProvider>
-          <SocketProvider>
-            
+          <SocketProvider>  
               <Router>
                 <Switch>
-                  <Route exact path='/' component={Login} />
-                  <Route path="/messages/:id" component={Messages} />
+                  <Route path="/chat" component={Chat} />
+                  <Route path="/" exact component={Home} />
+                  {/* <Route exact path='/' component={Login} />
                   <Route path='/chat' component={Chat} />
-                  <Route component={DefaultPage} />
+                  <Route component={DefaultPage} /> */}
                 </Switch>
               </Router>
-      
           </SocketProvider>
         </UsersProvider>
       </MainProvider>

@@ -15,8 +15,10 @@ const redisAdapter = require('socket.io-redis');
 const cors = require('cors')
 const path = require('path')
 const PORT = process.env.PORT || 80
-const { addUser, getUser, deleteUser, getUsers } = require('./users');
+const { addUser, getUser, deleteUser, getUsers, getAllUsers } = require('./users');
 
+
+const apiRouter = require('./routes/apiRouter');
 
 const REDIS_PORT = 11039;
 const REDIS_HOST = 'ec2-54-208-89-233.compute-1.amazonaws.com';
@@ -81,7 +83,7 @@ io.on('connection', (socket) => {
             // find the user -> socket
             var tempUsers = getUsers(user.room);
             var userFound = false;
-            console.log(tempUsers);
+            //console.log(tempUsers);
             for(var i=0; i<tempUsers.length; i++){
                 console.log(tempUsers[i]);
                 if(tempUsers[i].name === userTo){
@@ -119,11 +121,18 @@ io.on('connection', (socket) => {
             io.in(user.room).emit('users', getUsers(user.room))
         }
     })
+
+    socket.on('getUsers', () => {
+        var users = getAllUsers();
+        socket.broadcast.emit('usersOnline', users);
+    })
 })
+
+app.use('/api', apiRouter);
 
 app.get('/', (req, res) => {
     console.log('Im not the easter bunny');
-    res.sendFile(path.join(__dirname+"/client1/build/index.html"))
+    res.sendFile(path.join(__dirname+"/client/build/index.html"))
 })
 
 http.listen(PORT, () => {

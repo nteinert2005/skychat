@@ -58,7 +58,7 @@ const Home = () => {
                         </Form.Group>
                         <Button 
                             block 
-                            variant="outline-primary"
+                            variant="outline-light"
                             onClick={handleClick}
                         >
                             Login 

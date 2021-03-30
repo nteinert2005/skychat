@@ -14,7 +14,7 @@ const redis = require('redis')
 const redisAdapter = require('socket.io-redis');
 const cors = require('cors')
 const path = require('path')
-const PORT = process.env.PORT || 80
+const PORT = process.env.PORT || 5151;
 const { addUser, getUser, deleteUser, getUsers, getAllUsers } = require('./users');
 
 

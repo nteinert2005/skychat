@@ -14,7 +14,7 @@ export default class GroupList extends Component {
     }
 
     getUsers(){
-        axios.get("http://localhost/api/getUsers").then(res => {
+        axios.get(process.env.SERVER+"/api/getUsers").then(res => {
             var data = res.data;
             //console.log(data);
             this.setState({

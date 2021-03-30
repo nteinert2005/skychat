@@ -7,7 +7,7 @@ import Home from './components/Home/Home';
 
 // Providers 
 import { SocketProvider } from './socketContext'
-import { MainProvider } from '../../client1/src/mainContext'
+import { MainProvider } from './mainContext'
 import { UsersProvider } from './usersContext'
 
 // Styles 

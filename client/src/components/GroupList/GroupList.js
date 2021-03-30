@@ -1,6 +1,6 @@
 import React, {useState,  useContext, useEffect, Component } from 'react';
 import { Link, useHistory } from 'react-router-dom'
-import { MainContext } from '../../../../client1/src/mainContext'
+import { MainContext } from '../../mainContext'
 import { SocketContext } from '../../socketContext'
 import { UsersContext } from '../../usersContext'
 import axios from 'axios';

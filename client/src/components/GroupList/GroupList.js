@@ -20,7 +20,7 @@ export default class GroupList extends Component {
         } else {
             requestURL = "http://skywriterchat.herokuapp.com"
         }
-        
+
         axios.get(requestURL+"/api/getUsers").then(res => {
             var data = res.data;
             //console.log(data);
@@ -34,8 +34,10 @@ export default class GroupList extends Component {
         this.getUsers();
     }
 
-    componentDidUpdate(){
-        this.getUsers();
+    componentDidUpdate(prevState){
+        if(prevState.data !== this.state.data){
+            this.getUsers();
+        }
     }
 
     render(){

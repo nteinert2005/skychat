@@ -34,7 +34,7 @@ export default class GroupList extends Component {
         this.getUsers();
     }
 
-    componentDidUpdate(prevState){
+    componentDidUpdate(prevProps, prevState){
         if(prevState.data !== this.state.data){
             this.getUsers();
         }

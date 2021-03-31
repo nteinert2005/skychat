@@ -145,13 +145,13 @@ io.on('connection', (socket) => {
         if (user) {
             io.in(user.room).emit('notification', { title: 'Someone just left', description: `${user.name} just left the room` })
             io.in(user.room).emit('users', getUsers(user.room))
-            io.broadcast.emit('user_disconnected', null);
+            io.emit('user_disconnected', null);
         }
     })
 
     socket.on('getUsers', () => {
         var users = getAllUsers();
-        socket.broadcast.emit('usersOnline', users);
+        io.emit('usersOnline', users);
     })
 })
 

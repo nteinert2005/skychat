@@ -35,7 +35,9 @@ const GroupList = () => {
                 setUsers(res.data);
             })
         })
+    }, []);
 
+    useEffect( () => {
         socket.on('user_disconnected', (data) => {
             axios.get(requestURL+'/api/getUsers').then(res => {
                 //var data = res.data;

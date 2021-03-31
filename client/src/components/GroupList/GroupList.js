@@ -1,16 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+import { SocketContext } from '../../socketContext'
+
+let requestURL;
+if(process.env.NODE_ENV != 'production'){
+    requestURL = "http://localhost:5151"
+} else {
+    requestURL = "http://skywriterchat.herokuapp.com"
+}
+
 
 const GroupList = () => {
     const [ activeUsers, setUsers ] = useState([]);
+    const socket = useContext(SocketContext)
 
     const getUsers = () => {
-        let requestURL;
-        if(process.env.NODE_ENV != 'production'){
-            requestURL = "http://localhost:5151"
-        } else {
-            requestURL = "http://skywriterchat.herokuapp.com"
-        }
+        
         axios.get(requestURL+'/api/getUsers').then(res => {
             //var data = res.data;
             //console.log(res.data);
@@ -22,6 +27,23 @@ const GroupList = () => {
         getUsers();
     }, []);
 
+    useEffect( () => {
+        socket.on('users', (data) => {
+            axios.get(requestURL+'/api/getUsers').then(res => {
+                //var data = res.data;
+                //console.log(res.data);
+                setUsers(res.data);
+            })
+        })
+
+        socket.on('user_disconnected', (data) => {
+            axios.get(requestURL+'/api/getUsers').then(res => {
+                //var data = res.data;
+                //console.log(res.data);
+                setUsers(res.data);
+            })
+        })
+    }, []);
 
     const startPrivate = (el) => {
         console.log(el.currentTarget.getAttribute('data-name'));

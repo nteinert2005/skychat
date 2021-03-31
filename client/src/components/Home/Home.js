@@ -1,16 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { MainContext } from '../../mainContext'
-import { SocketContext } from '../../socketContext'
 import { UsersContext } from '../../usersContext'
 import userRooms from '../../userRooms';
-
+import axios from 'axios';
 
 import { Container, Row, Form, Button }  from 'react-bootstrap'
 
 
 const Home = () => {
-    const socket = useContext(SocketContext)
     const { name, setName, room, setRoom } = useContext(MainContext)
     const history = useHistory()
     const { setUsers } = useContext(UsersContext)
@@ -33,11 +31,26 @@ const Home = () => {
 
     const handleClick = (e) => {
         e.preventDefault();
-        socket.emit('login', {name, room}, error => {
-            if(error){
-                console.log(error);
+        let requestURL;
+        if(process.env.NODE_ENV != 'production'){
+            requestURL = "http://localhost:5151"
+        } else {
+            requestURL = "http://skywriterchat.herokuapp.com"
+        }
+
+        axios.get(requestURL+"/auth/login", {
+            params: {
+                username: name, 
+                room: room
             }
-            history.push('/chat');
+        })
+        .then(function(response) {
+            //console.log(response);
+            if(response.data){
+                history.push('/chat');
+            } else {
+                history.push('/');
+            }
         })
     }
 

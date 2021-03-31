@@ -32,9 +32,11 @@ const addUser = (id, name, room) => {
     return { user }
 }
 
-const getUser = id => {
-    let user = CONNECTED_USERS.find(user => user.id == id)
-    return user
+const getUser = user => {
+    //console.log(user);
+    console.log('--- name: '+user+" ---");
+    const temp = CONNECTED_USERS.find(user => CONNECTED_USERS.name === user.username)
+    return temp;
 }
 
 const deleteUser = (id) => {

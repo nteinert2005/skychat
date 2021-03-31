@@ -19,6 +19,7 @@ const { addUser, getUser, deleteUser, getUsers, getAllUsers } = require('./users
 
 
 const apiRouter = require('./routes/apiRouter');
+const authRouter = require('./routes/authRouter');
 
 const REDIS_PORT = 11039;
 const REDIS_HOST = 'ec2-54-208-89-233.compute-1.amazonaws.com';
@@ -44,6 +45,31 @@ function log_me(msg){
 }
 
 io.on('connection', (socket) => {
+    socket.on('test', (data) => {
+        const { user, err } = addUser(socket.id, data.username, data.defaultRoom);
+        if (err) throw err;
+        socket.join(user.room);
+        socket.broadcast.emit('users', getUsers());
+    });
+
+    socket.on('findRooms', () => {
+        console.log('client wants all rooms');
+        const allRooms = socket.rooms;
+        var tempRoomList = [];
+
+        allRooms.forEach(room => {
+            if(room == socket.id){
+            } else {
+                tempRoomList.push(room);
+            }
+            
+        })
+        
+        socket.emit('allRooms', {
+            roomList: tempRoomList
+        });
+    })
+    
     socket.on('login', ({ name, room }, callback) => {
         console.log("user connected to room: "+room);
         const { user, error } = addUser(socket.id, name, room)
@@ -129,6 +155,7 @@ io.on('connection', (socket) => {
 })
 
 app.use('/api', apiRouter);
+app.use('/auth', authRouter);
 
 app.get('/', (req, res) => {
     console.log('Im not the easter bunny');

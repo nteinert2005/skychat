@@ -1,52 +1,42 @@
-import React, {useState,  useContext, useEffect, Component } from 'react';
-import { Link, useHistory } from 'react-router-dom'
-import { MainContext } from '../../mainContext'
-import { SocketContext } from '../../socketContext'
-import { UsersContext } from '../../usersContext'
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default class GroupList extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            users: []
-        }
-    }
+const GroupList = () => {
+    const [ activeUsers, setUsers ] = useState([]);
 
-    getUsers(){
+    const getUsers = () => {
         let requestURL;
         if(process.env.NODE_ENV != 'production'){
             requestURL = "http://localhost:5151"
         } else {
             requestURL = "http://skywriterchat.herokuapp.com"
         }
-
-        axios.get(requestURL+"/api/getUsers").then(res => {
-            var data = res.data;
-            //console.log(data);
-            this.setState({
-                users: data 
-            });
+        axios.get(requestURL+'/api/getUsers').then(res => {
+            //var data = res.data;
+            //console.log(res.data);
+            setUsers(res.data);
         })
     }
 
-    componentDidMount(){
-        this.getUsers();
+    useEffect( () => {
+        getUsers();
+    }, [activeUsers]);
+
+    const startPrivate = (el) => {
+        console.log(el.currentTarget.getAttribute('data-name'));
     }
 
-    componentDidUpdate(prevProps, prevState){
-        if(prevState.data !== this.state.data){
-            this.getUsers();
-        }
-    }
-
-    render(){
-        return(
-            <>
-                <ul>
-                    {this.state.users.map(u => (<li key={u.id}>{u.name}</li>))}
-                </ul>
-            </>
-        )
-    }
+    return(
+        <>
+            <ul>
+                {
+                    activeUsers.map(function(d, idx){
+                        return (<li key={idx} data-name={d.name} onClick={startPrivate.bind(this)}>{d.name}</li>)
+                    })
+                }
+            </ul>
+        </>
+    )
 }
+
+export default GroupList;

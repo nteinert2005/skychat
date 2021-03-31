@@ -15,8 +15,15 @@ var tempUsers = [
 
 router.get('/getUsers', (req, res) => {
     var temp = getAllUsers();
-
     res.json(temp);  
 });
+
+router.get('/getRooms', (req, res) => {
+    //console.log(req.query);
+    var tempID = getUser(req.query.username);
+    res.json(tempID);
+})
+
+
 
 module.exports = router;

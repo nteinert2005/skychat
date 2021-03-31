@@ -20,6 +20,15 @@ const Chat = () => {
     useEffect(() => { if (!name) return history.push('/') }, [history, name])
     useEffect(() => { if (!room) return history.push('/') }, [history, room])
     
+    useEffect(() => {
+        if(name != ''){
+            socket.emit('test', {
+                username: name,
+                defaultRoom: room
+            });
+        }
+    }, []);
+
     return(
         <>
             <Container fluid>

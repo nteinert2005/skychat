@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
         const { user, err } = addUser(socket.id, data.username, data.defaultRoom);
         if (err) throw err;
         socket.join(user.room);
-        socket.broadcast.emit('users', getUsers());
+        io.broadcast.emit('users', getUsers());
     });
 
     socket.on('findRooms', () => {
@@ -145,7 +145,7 @@ io.on('connection', (socket) => {
         if (user) {
             io.in(user.room).emit('notification', { title: 'Someone just left', description: `${user.name} just left the room` })
             io.in(user.room).emit('users', getUsers(user.room))
-            socket.broadcast.emit('user_disconnected', null);
+            io.broadcast.emit('user_disconnected', null);
         }
     })
 

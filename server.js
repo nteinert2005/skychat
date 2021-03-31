@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
         const { user, err } = addUser(socket.id, data.username, data.defaultRoom);
         if (err) throw err;
         socket.join(user.room);
-        io.broadcast.emit('users', getUsers());
+        io.emit('users', getUsers());
     });
 
     socket.on('findRooms', () => {

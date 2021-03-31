@@ -20,7 +20,8 @@ const GroupList = () => {
 
     useEffect( () => {
         getUsers();
-    }, [activeUsers]);
+    }, []);
+
 
     const startPrivate = (el) => {
         console.log(el.currentTarget.getAttribute('data-name'));

@@ -12,20 +12,19 @@ if(process.env.NODE_ENV != 'production'){
 
 const GroupList = () => {
     const [ activeUsers, setUsers ] = useState([]);
-    //const socket = useContext(SocketContext)
+    const socket = useContext(SocketContext)
 
-    const getUsers = () => {
-        
-        axios.get(requestURL+'/api/getUsers').then(res => {
-            //var data = res.data;
-            //console.log(res.data);
+    const getUsers = async () => {
+        await axios.get(requestURL+'/api/getUsers').then(res => {
             setUsers(res.data);
         })
     }
 
     useEffect( () => {
-        getUsers();
-    }, [activeUsers]);
+        socket.on('user_join', () => {
+            getUsers();
+        })        
+    }, []);
 
     // useEffect( () => {
     //     socket.on('users', (data) => {

@@ -23,7 +23,11 @@ const GroupList = () => {
     useEffect( () => {
         socket.on('user_join', () => {
             getUsers();
-        })        
+        });
+        
+        socket.on('user_left', () => {
+            getUsers();
+        })
     }, []);
 
     // useEffect( () => {

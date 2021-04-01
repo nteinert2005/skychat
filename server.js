@@ -51,6 +51,9 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`Disconnected: ${socket.id}`);
+        io.emit('user_leave', {
+            userMap: deleteUser(socket.id);
+        })
     });
 
     socket.on('join', (data) => {

@@ -16,7 +16,11 @@ if(cluster.isMaster){
     });
 
     cluster.on('exit', function(worker, code, signal) {
-        console.log('Worker '+worker.process.pid+" died.");
+        if(code !== 0 && !worker.exitedAfterDisconnect){
+            console.log('Worker '+worker.process.pid+" died.");
+            const nw = cluster.fork();
+            console.log('Worker '+nw.process.pid+" will replace "+worker.process.pid+".")
+        }
     });
 } else {
     require('./server.js');

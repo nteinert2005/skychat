@@ -2,7 +2,7 @@ const cluster = require('cluster');
 const express = require('express');
 const path = require('path');
 
-var PORT = 5151;
+const PORT = process.env.PORT || 5151;
 var ROOT = path.dirname(__dirname);
 var cCPUs = require('os').cpus().length;
 

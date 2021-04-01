@@ -52,7 +52,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log(`Disconnected: ${socket.id}`);
         io.emit('user_leave', {
-            userMap: deleteUser(socket.id);
+            userMap: deleteUser(socket.id)
         })
     });
 

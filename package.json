@@ -4,10 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "preinstall": "npm install pm2 -g && pm2 install pm2-logrotate",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js", 
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",

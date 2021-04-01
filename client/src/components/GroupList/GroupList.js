@@ -12,7 +12,7 @@ if(process.env.NODE_ENV != 'production'){
 
 const GroupList = () => {
     const [ activeUsers, setUsers ] = useState([]);
-    const socket = useContext(SocketContext)
+    //const socket = useContext(SocketContext)
 
     const getUsers = () => {
         
@@ -25,27 +25,27 @@ const GroupList = () => {
 
     useEffect( () => {
         getUsers();
-    }, []);
+    }, [activeUsers]);
 
-    useEffect( () => {
-        socket.on('users', (data) => {
-            axios.get(requestURL+'/api/getUsers').then(res => {
-                //var data = res.data;
-                //console.log(res.data);
-                setUsers(res.data);
-            })
-        })
-    }, []);
+    // useEffect( () => {
+    //     socket.on('users', (data) => {
+    //         axios.get(requestURL+'/api/getUsers').then(res => {
+    //             //var data = res.data;
+    //             //console.log(res.data);
+    //             setUsers(res.data);
+    //         })
+    //     })
+    // }, []);
 
-    useEffect( () => {
-        socket.on('user_disconnected', (data) => {
-            axios.get(requestURL+'/api/getUsers').then(res => {
-                //var data = res.data;
-                //console.log(res.data);
-                setUsers(res.data);
-            })
-        })
-    }, []);
+    // useEffect( () => {
+    //     socket.on('user_disconnected', (data) => {
+    //         axios.get(requestURL+'/api/getUsers').then(res => {
+    //             //var data = res.data;
+    //             //console.log(res.data);
+    //             setUsers(res.data);
+    //         })
+    //     })
+    // }, []);
 
     const startPrivate = (el) => {
         console.log(el.currentTarget.getAttribute('data-name'));

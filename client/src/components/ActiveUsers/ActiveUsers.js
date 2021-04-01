@@ -7,7 +7,7 @@ import GroupList from '../GroupList/GroupList';
 import { Container, Form, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
 
-const ActiveUsers = () => {
+const ActiveUsers = (props) => {
     return(
         <>
                 <Form>
@@ -28,7 +28,7 @@ const ActiveUsers = () => {
                 <h5 style={{display: "block", marginTop: '1em'}} className="text-muted">Rooms</h5>
                 <DirectMessageList />
                 <h5 style={{paddingTop: "1em", display: "block"}} className="text-muted">Active Users</h5>
-                <GroupList />
+                <GroupList users={props.users} />
 
         </>
     )

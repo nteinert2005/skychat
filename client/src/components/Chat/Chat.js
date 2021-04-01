@@ -12,20 +12,26 @@ import { Container, Row, Col } from 'react-bootstrap';
 const Chat = () => {
     const { name, room, setName, setRoom } = useContext(MainContext)
     const socket = useContext(SocketContext)
-    const [message, setMessage] = useState('')
     const [messages, setMessages] = useState([])
-    const { users } = useContext(UsersContext)
+    const { users, setUsers } = useContext(UsersContext)
     const history = useHistory()
 
     useEffect(() => { if (!name) return history.push('/') }, [history, name])
     useEffect(() => { if (!room) return history.push('/') }, [history, room])
-    
+
     useEffect(() => {
         if(name != ''){
-            socket.emit('test', {
+            socket.emit('join', {
                 username: name,
                 defaultRoom: room
             });
+
+            socket.on('user_join', data => {
+                //console.log(data.userMap);
+                //users = data.userMap;
+                //console.log("users");
+                setUsers(data.userMap);
+            })
         }
     }, []);
 
@@ -37,7 +43,7 @@ const Chat = () => {
                         <Sidebar />
                     </Col>
                     <Col lg={2} className="activeusers">
-                        <ActiveUsers />
+                        <ActiveUsers users={users} />
                     </Col>
                     <Col lg={9} className="chat">
                         <Room />

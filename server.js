@@ -15,8 +15,8 @@ const redisAdapter = require('socket.io-redis');
 const cors = require('cors')
 const path = require('path')
 const PORT = process.env.PORT || 5151;
-const { addUser, getUser, deleteUser, getUsers, getAllUsers } = require('./users');
-
+const { addUser, getUser, deleteUser, getUsers, getAllUsers, findBySocketID } = require('./users');
+const crypto = require('crypto');
 
 const apiRouter = require('./routes/apiRouter');
 const authRouter = require('./routes/authRouter');
@@ -62,6 +62,18 @@ io.on('connection', (socket) => {
         io.emit('user_join', {
             userMap: getUsers()
         })
+    });
+
+    socket.on('start_private', (data) => {
+        var person1 = getUser(data.socketTo);
+        var person2 = findBySocketID(socket.id);
+
+        console.log(`Private message: ${person1.name} <> ${person2.name}`);
+        var randomRoom = crypto.randomBytes(20).toString('hex');
+        socket.join(randomRoom);
+        io.to(person1.id).to(person2.id).emit("private_started", {
+            newRoom: randomRoom
+        });
     });
 
     // socket.on('test', (data) => {

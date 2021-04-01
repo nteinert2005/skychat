@@ -23,6 +23,7 @@ function App() {
               <Router>
                 <Switch>
                   <Route path="/chat" component={Chat} />
+                  <Route path="/room/:id" component={Chat} /> 
                   <Route path="/" exact component={Home} />
                   {/* <Route exact path='/' component={Login} />
                   <Route path='/chat' component={Chat} />

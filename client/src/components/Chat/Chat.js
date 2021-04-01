@@ -36,7 +36,7 @@ const Chat = () => {
     }, []);
 
     return(
-        <>
+        <div style={{ position: 'relative' }}>
             <Container fluid>
                 <Row>
                     <Col lg={1}>
@@ -50,7 +50,7 @@ const Chat = () => {
                     </Col>
                 </Row>
             </Container>
-        </>
+        </div>
     )
 }
 

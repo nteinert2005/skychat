@@ -44,6 +44,18 @@ const deleteUser = (id) => {
     if (index !== -1) return CONNECTED_USERS.splice(index, 1)[0];
 }
 
+const findBySocketID = user => {
+    console.log('--- user: '+user+" ---");
+    for(var index = 0; index < CONNECTED_USERS.length; index++){
+        if(CONNECTED_USERS[index].id == user){
+            console.log('--- found: '+CONNECTED_USERS[index].name+" ---");
+            return CONNECTED_USERS[index];
+        }
+    }
+    
+    
+}
+
 const getAllUsers = () => {
     const users = CONNECTED_USERS;
     return users;
@@ -51,4 +63,4 @@ const getAllUsers = () => {
 
 const getUsers = (room) => CONNECTED_USERS.filter(user => user.room === room)
 
-module.exports = { addUser, getUser, deleteUser, getUsers, getAllUsers }
+module.exports = { addUser, getUser, deleteUser, getUsers, getAllUsers, findBySocketID }

@@ -196,6 +196,5 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname+"/client/build/index.html"))
 })
 
-http.listen(PORT, () => {
-    console.log(`Listening to ${PORT}`);
-})
+
+module.exports = app;

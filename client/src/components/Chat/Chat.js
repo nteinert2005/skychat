@@ -26,6 +26,10 @@ const Chat = () => {
                 defaultRoom: room
             });
 
+            socket.on('test_broadcast', () => {
+                console.log('test from the server');
+            });
+
             socket.on('user_join', data => {
                 //console.log(data.userMap);
                 //users = data.userMap;

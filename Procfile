@@ -1,1 +1,1 @@
-web: nodemon cluster-server.js
+web: node cluster-server.js

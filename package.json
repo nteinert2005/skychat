@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon cluster-server.js", 
+    "start": "node cluster-server.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "author": "",
@@ -13,9 +13,14 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-cluster": "0.0.5",
+    "farmhash": "^3.2.1",
+    "net": "^1.0.2",
     "nodemon": "^2.0.7",
     "redis": "^3.0.2",
     "socket.io": "^3.1.0",
-    "socket.io-redis": "^6.1.0"
+    "socket.io-redis": "^6.1.0",
+    "socketio-sticky-session": "^0.4.3",
+    "sticky-session": "^1.1.2"
   }
 }

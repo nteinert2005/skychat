@@ -1,27 +1,40 @@
-const cluster = require('cluster');
-const express = require('express');
-const path = require('path');
+var sticky = require('sticky-session'),
+    http = require('http'), 
+    express = require('express'),
+    socketIO = require('socket.io'),
+    cluster = require('cluster'),
+    cors = require('cors'),
+    PORT = process.env.PORT || 5151;
 
-const PORT = process.env.PORT || 5151;
-var ROOT = path.dirname(__dirname);
-var cCPUs = require('os').cpus().length;
+const apiRouter = require('./routes/apiRouter');
+const authRouter = require('./routes/authRouter');
 
-if(cluster.isMaster){
-    for(var i = 0; i < cCPUs; i++){
-        cluster.fork();
+var app = express(), io; 
+
+var server = http.Server(app);
+
+app.use(cors());
+app.use('/api', apiRouter);
+app.use('/auth', authRouter);
+
+app.get('/', (req, res) => {
+    console.log('send message to worker: '+cluster.worker.id);
+});
+
+io = socketIO(server);
+
+io.on('connection', (socket) => {
+    console.log('socket login goes here');
+})
+
+if(!sticky.listen(server, PORT)){
+    server.once('listening', function(){
+        console.log(`Server up and running on port ${PORT}`);
+    });
+
+    if(cluster.isMaster){
+        console.log(`Master server started on port ${PORT}`);
     }
-
-    cluster.on('online', function(worker){
-        console.log('Worker '+worker.process.pid+" is online.");
-    });
-
-    cluster.on('exit', function(worker, code, signal) {
-        if(code !== 0 && !worker.exitedAfterDisconnect){
-            console.log('Worker '+worker.process.pid+" died.");
-            const nw = cluster.fork();
-            console.log('Worker '+nw.process.pid+" will replace "+worker.process.pid+".")
-        }
-    });
 } else {
-    require('./server.js');
+    console.log(`- Child server started on port: ${PORT} with case worker id:${cluster.worker.id}`)
 }

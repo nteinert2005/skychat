@@ -3,7 +3,6 @@ const cluster = require("cluster");
 const express = require('express');
 const app = express();
 const http = require("http");
-const { Server } = require("socket.io");
 const redisAdapter = require("socket.io-redis");
 const numCPUs = require("os").cpus().length;
 const { setupMaster, setupWorker } = require("@socket.io/sticky");
@@ -12,12 +11,16 @@ const REDIS_PORT = 11039;
 const REDIS_HOST = 'ec2-54-208-89-233.compute-1.amazonaws.com';
 const PORT = process.env.port || 5151;
 const cors = require('cors');
+const { expressCspHeader, INLINE, NONE, SELF } = require('express-csp-header');
 
 const apiRouter = require('./routes/apiRouter');
 const authRouter = require('./routes/authRouter');
 
+app.use(cors());
+
+
 if (cluster.isMaster) {
-    console.log(`Master ${process.pid} is running`);
+    console.log(`Master ${process.pid} is running on port ${PORT}`);
 
     const httpServer = http.createServer(app);
     setupMaster(httpServer, {
@@ -37,7 +40,8 @@ if (cluster.isMaster) {
     console.log(`Worker ${process.pid} started`);
 
     const httpServer = http.createServer(app);
-    const io = new Server(httpServer);
+
+    const io = require('socket.io')(httpServer);
     const pubClient = redis.createClient(REDIS_PORT, REDIS_HOST, {
         auth_pass: 'p551765675b247d78dddf9b57847dd89db0af13d4ab51b86fdf47f976ad7a365a'
     });
@@ -48,7 +52,11 @@ if (cluster.isMaster) {
 
     setupWorker(io);
 
-    app.use(cors());
+    //app.use(cors());
+    //app.options('*', cors());
+
+    
+
     app.use('/api', apiRouter);
     app.use('/auth', authRouter);
 

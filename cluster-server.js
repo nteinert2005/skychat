@@ -17,9 +17,6 @@ const apiRouter = require('./routes/apiRouter');
 const authRouter = require('./routes/authRouter');
 
 
-app.use(cors());
-
-
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running on port ${PORT}`);
 
@@ -53,6 +50,7 @@ if (cluster.isMaster) {
     setupWorker(io);
 
     app.use(cors());
+    app.use('/', express.static(__dirname+"/client/build"));
     // //app.options('*', cors());
 
     
@@ -65,18 +63,17 @@ if (cluster.isMaster) {
     //     console.log('Client is listen now.');
     // });
 
-
-    require('./server.js');
-
     io.on("connection", (socket) => {
-        console.log(`Socket connected on port ${PORT} on cluster: ${process.pid}`);
+        console.log(`${cluster.worker.id} | connection | ${socket.id} | ${PORT}`);
+        
+        //console.log(`Socket connected on port ${PORT} on cluster: ${process.pid}`);
 
         socket.on('join', data => {
             console.log(`Socket joined the chat room: ${data.defaultRoom}`);
         })
     });
 
-    app.get('*', (req, res) => {
+    app.get('/', (req, res) => {
         res.sendFile(path.join(__dirname+"/client/build/index.html"))
     });
 

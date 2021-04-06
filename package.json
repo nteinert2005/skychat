@@ -13,16 +13,10 @@
   "dependencies": {
     "@socket.io/sticky": "^1.0.0",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "express-cluster": "0.0.5",
-    "express-csp-header": "^4.1.0",
-    "farmhash": "^3.2.1",
-    "net": "^1.0.2",
+    "express": "^4.17.1",    
     "nodemon": "^2.0.7",
     "redis": "^3.0.2",
     "socket.io": "^3.1.0",
-    "socket.io-redis": "^6.1.0",
-    "socketio-sticky-session": "^0.4.3",
-    "sticky-session": "^1.1.2"
+    "socket.io-redis": "^6.1.0"
   }
 }

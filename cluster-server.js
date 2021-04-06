@@ -8,13 +8,14 @@ const numCPUs = require("os").cpus().length;
 const { setupMaster, setupWorker } = require("@socket.io/sticky");
 const redis = require('redis')
 const REDIS_PORT = 11039;
+const path = require('path');
 const REDIS_HOST = 'ec2-54-208-89-233.compute-1.amazonaws.com';
 const PORT = process.env.port || 5151;
 const cors = require('cors');
-const { expressCspHeader, INLINE, NONE, SELF } = require('express-csp-header');
 
 const apiRouter = require('./routes/apiRouter');
 const authRouter = require('./routes/authRouter');
+
 
 app.use(cors());
 
@@ -26,7 +27,6 @@ if (cluster.isMaster) {
     setupMaster(httpServer, {
         loadBalancingMethod: "least-connection", // either "random", "round-robin" or "least-connection"
     });
-    httpServer.listen(PORT);
 
     for (let i = 0; i < numCPUs; i++) {
         cluster.fork();
@@ -52,19 +52,33 @@ if (cluster.isMaster) {
 
     setupWorker(io);
 
-    //app.use(cors());
-    //app.options('*', cors());
+    // //app.use(cors());
+    // //app.options('*', cors());
 
     
 
-    app.use('/api', apiRouter);
-    app.use('/auth', authRouter);
+    // app.use('/api', apiRouter);
+    // app.use('/auth', authRouter);
+
+    // httpServer.listen(80, error => {
+    //     if(error) return console.error(error);
+    //     console.log('Client is listen now.');
+    // });
+
+
+    require('./server.js');
 
     io.on("connection", (socket) => {
-        console.log(`Socket connected on port ${PORT}`);
+        console.log(`Socket connected on port ${PORT} on cluster: ${process.pid}`);
 
         socket.on('join', data => {
             console.log(`Socket joined the chat room: ${data.defaultRoom}`);
         })
     });
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname+"/client/build/index.html"))
+    });
+
+    httpServer.listen(PORT);
 }

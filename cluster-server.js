@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const http = require("http");
 const redisAdapter = require("socket.io-redis");
-const numCPUs = 3;
+const numCPUs = 2;
 const { setupMaster, setupWorker } = require("@socket.io/sticky");
 const redis = require('redis')
 const REDIS_PORT = 11039;
@@ -52,7 +52,7 @@ if (cluster.isMaster) {
 
     setupWorker(io);
 
-    // //app.use(cors());
+    app.use(cors());
     // //app.options('*', cors());
 
     

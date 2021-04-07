@@ -5,12 +5,12 @@ import io from 'socket.io-client'
 const SocketContext = React.createContext()
 
 const SocketProvider = ({ children }) => {
-    var ENDPOINT = "http://localhost:5151";
-    // if(!process.env.NODE_ENV || process.env.NODE_ENV === "development"){
-    //     ENDPOINT = "http://localhost:5151";
-    // } else {
-    //     ENDPOINT = 'https://skywriterchat.herokuapp.com/';
-    // }
+    //var ENDPOINT = "http://localhost:5151";
+    if(!process.env.NODE_ENV || process.env.NODE_ENV === "development"){
+        ENDPOINT = "http://localhost:5151";
+    } else {
+        ENDPOINT = 'https://skywriterchat.herokuapp.com/';
+    }
     const socket = io(ENDPOINT, { transports: ['websocket', 'polling'] })
     return (
         <SocketContext.Provider value={socket}>

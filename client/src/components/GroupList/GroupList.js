@@ -66,6 +66,7 @@ const GroupList = () => {
 
     const startPrivate = (el) => {
         var sendTo = el.target.getAttribute('data-name');
+        console.log(sendTo);
         socket.emit('start_private', {
             socketTo: sendTo
         })

@@ -78,22 +78,25 @@ if (cluster.isMaster) {
             //console.log(`Socket joined the chat room: ${data.defaultRoom}`);
             const { user, err } = addUser(socket.id, data.username, data.defaultRoom);
             io.emit('user_join', {
-                userMap: getUsers()
+                userMap: getAllUsers()
             })
         })
 
         socket.on('disconnect', () => {
             log_me(cluster.worker.id, 'disconnected', socket.id, PORT);
             //console.log(`Disconnected: ${socket.id}`);
+            var user = deleteUser(socket.id);
             io.emit('user_leave', {
-                userMap: deleteUser(socket.id)
+                userMap: getAllUsers()
             })
         });
 
         socket.on('start_private', (data) => {
             var person1 = getUser(data.socketTo);
+            console.log('---- person 1:'+person1.name+" ----");
             var person2 = findBySocketID(socket.id);
-    
+            console.log('---- person 2:'+person2.name+" ----");
+
             log_me(cluster.worker.id, `private_message_start ${person1.name} <> ${person2.name}`, socket.id, PORT)
             var randomRoom = crypto.randomBytes(20).toString('hex');
             log_me(cluster.worker.id, `room created: ${randomRoom}`, socket.id, PORT);

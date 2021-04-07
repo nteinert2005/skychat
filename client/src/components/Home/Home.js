@@ -32,11 +32,7 @@ const Home = () => {
     const handleClick = (e) => {
         e.preventDefault();
         let requestURL;
-        if(process.env.NODE_ENV != 'production'){
-            requestURL = "http://localhost:5151"
-        } else {
-            requestURL = "http://skywriterchat.herokuapp.com"
-        }
+        requestURL = "http://localhost:5151";
 
         axios.get(requestURL+"/auth/login", {
             params: {

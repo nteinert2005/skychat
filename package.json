@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "dev": "SET NODE_ENV=development && nodemon cluster-server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node cluster-server.js",
     "heroku-postbuild": "cd client && npm install && npm run build"

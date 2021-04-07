@@ -12,6 +12,8 @@ const path = require('path');
 const REDIS_HOST = 'ec2-54-208-89-233.compute-1.amazonaws.com';
 const PORT = process.env.port || 5151;
 const cors = require('cors');
+const { addUser, getUser, deleteUser, getUsers, getAllUsers, findBySocketID } = require('./users');
+const crypto = require('crypto');
 
 const apiRouter = require('./routes/apiRouter');
 const authRouter = require('./routes/authRouter');
@@ -50,32 +52,76 @@ if (cluster.isMaster) {
     setupWorker(io);
 
     app.use(cors());
-    app.use('/', express.static(__dirname+"/client/build"));
     // //app.options('*', cors());
 
     
 
-    // app.use('/api', apiRouter);
-    // app.use('/auth', authRouter);
+    
 
     // httpServer.listen(80, error => {
     //     if(error) return console.error(error);
     //     console.log('Client is listen now.');
     // });
 
+    function log_me(worker_id, action, socket, port){
+        console.log(`${worker_id} | ${action} | ${socket} | ${port}`);
+    }
+
     io.on("connection", (socket) => {
-        console.log(`${cluster.worker.id} | connection | ${socket.id} | ${PORT}`);
+        //console.log(`${cluster.worker.id} | connection | ${socket.id} | ${PORT}`);
+        log_me(cluster.worker.id, "connection", socket.id, PORT)
         
         //console.log(`Socket connected on port ${PORT} on cluster: ${process.pid}`);
 
         socket.on('join', data => {
-            console.log(`Socket joined the chat room: ${data.defaultRoom}`);
+            log_me(cluster.worker.id, `joined: ${data.defaultRoom}`, socket.id, PORT);
+            //console.log(`Socket joined the chat room: ${data.defaultRoom}`);
+            const { user, err } = addUser(socket.id, data.username, data.defaultRoom);
+            io.emit('user_join', {
+                userMap: getUsers()
+            })
         })
+
+        socket.on('disconnect', () => {
+            log_me(cluster.worker.id, 'disconnected', socket.id, PORT);
+            //console.log(`Disconnected: ${socket.id}`);
+            io.emit('user_leave', {
+                userMap: deleteUser(socket.id)
+            })
+        });
+
+        socket.on('start_private', (data) => {
+            var person1 = getUser(data.socketTo);
+            var person2 = findBySocketID(socket.id);
+    
+            log_me(cluster.worker.id, `private_message_start ${person1.name} <> ${person2.name}`, socket.id, PORT)
+            var randomRoom = crypto.randomBytes(20).toString('hex');
+            log_me(cluster.worker.id, `room created: ${randomRoom}`, socket.id, PORT);
+            socket.join(randomRoom);
+            io.to(person1.id).to(person2.id).emit("private_started", {
+                newRoom: randomRoom
+            });
+        });
     });
 
-    app.get('/', (req, res) => {
-        res.sendFile(path.join(__dirname+"/client/build/index.html"))
-    });
+    app.use('/api', apiRouter);
+    app.use('/auth', authRouter);
+
+
+    if(process.env.NODE_ENV === 'production'){
+        console.log('--- production ---');
+        app.use(express.static('client/build'));
+
+        app.get('/', (req, res) => {
+            res.sendFile(path.join(__dirname+"/client/build/index.html"))
+        })
+    } else {
+        console.log('--- development ---');
+        app.get('/', (req, res) => {
+            app.use(express.static('client/build'));
+            res.sendFile(path.join(__dirname+"/client/build/index.html"))
+        })
+    }
 
     httpServer.listen(PORT);
 }

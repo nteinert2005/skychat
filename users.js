@@ -34,7 +34,7 @@ const addUser = (id, name, room) => {
 
 const getUser = user => {
     //console.log(user);
-    console.log('--- name: '+user+" ---");
+    //console.log('--- name: '+user+" ---");
     const temp = CONNECTED_USERS.find(user => CONNECTED_USERS.name === user.username)
     return temp;
 }
@@ -45,7 +45,7 @@ const deleteUser = (id) => {
 }
 
 const findBySocketID = user => {
-    console.log('--- user: '+user+" ---");
+    //console.log('--- user: '+user+" ---");
     for(var index = 0; index < CONNECTED_USERS.length; index++){
         if(CONNECTED_USERS[index].id == user){
             console.log('--- found: '+CONNECTED_USERS[index].name+" ---");

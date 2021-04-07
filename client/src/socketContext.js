@@ -6,6 +6,7 @@ const SocketContext = React.createContext()
 
 const SocketProvider = ({ children }) => {
     //var ENDPOINT = "http://localhost:5151";
+    var ENDPOINT = "";
     if(!process.env.NODE_ENV || process.env.NODE_ENV === "development"){
         ENDPOINT = "http://localhost:5151";
     } else {

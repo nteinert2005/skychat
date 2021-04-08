@@ -12,7 +12,10 @@ const SocketProvider = ({ children }) => {
     } else {
         ENDPOINT = 'https://skywriterchat.herokuapp.com/';
     }
-    const socket = io(ENDPOINT, { transports: ['websocket', 'polling'] })
+    const socket = io(ENDPOINT, { 
+        forceNode: true,
+        transports: ['websocket', 'polling'] 
+    });
     return (
         <SocketContext.Provider value={socket}>
             {children}

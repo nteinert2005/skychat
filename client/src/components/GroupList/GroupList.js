@@ -30,6 +30,7 @@ const GroupList = () => {
 
     useEffect( () => {
         socket.on('user_join', () => {
+            console.log('user entered the team');
             getUsers();
         });
         

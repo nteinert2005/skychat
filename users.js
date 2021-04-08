@@ -61,6 +61,9 @@ const getAllUsers = () => {
     return users;
 }
 
-const getUsers = (room) => CONNECTED_USERS.filter(user => user.room === room)
+const getUsers = (room) => {
+    var users = CONNECTED_USERS.filter(user => user.room === room)
+    return users;
+}
 
 module.exports = { addUser, getUser, deleteUser, getUsers, getAllUsers, findBySocketID }

@@ -18,18 +18,22 @@ const crypto = require('crypto');
 const apiRouter = require('./routes/apiRouter');
 const authRouter = require('./routes/authRouter');
 
+// for windows running only
+cluster.schedulingPolicy = cluster.SCHED_RR;
+
 
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running on port ${PORT}`);
 
     const httpServer = http.createServer(app);
     setupMaster(httpServer, {
-        loadBalancingMethod: "least-connection", // either "random", "round-robin" or "least-connection"
+        loadBalancingMethod: "round-robin", // either "random", "round-robin" or "least-connection"
     });
 
     for (let i = 0; i < numCPUs; i++) {
         cluster.fork();
     }
+            
 
     cluster.on("exit", (worker) => {
         console.log(`Worker ${worker.process.pid} died`);
@@ -77,17 +81,30 @@ if (cluster.isMaster) {
             log_me(cluster.worker.id, `joined: ${data.defaultRoom}`, socket.id, PORT);
             //console.log(`Socket joined the chat room: ${data.defaultRoom}`);
             const { user, err } = addUser(socket.id, data.username, data.defaultRoom);
-            io.emit('user_join', {
-                userMap: getAllUsers()
-            })
+            var userMap = getAllUsers();
+
+            io.sockets.emit('new_user', {
+                user_join : true
+            });
+
+            for(var i = 0; i < userMap.length; i++){
+                if(userMap[i].room == data.defaultRoom){
+                    console.log(data.defaultRoom);
+                    io.to(userMap[i].id).emit('user_join', {
+                        userMap: getUsers(data.defaultRoom)
+                    })
+                }
+            }
         })
 
         socket.on('disconnect', () => {
             log_me(cluster.worker.id, 'disconnected', socket.id, PORT);
             //console.log(`Disconnected: ${socket.id}`);
+            var oldUser = getUser(socket.id);
             var user = deleteUser(socket.id);
+
             io.emit('user_leave', {
-                userMap: getAllUsers()
+                userMap: getUsers()
             })
         });
 

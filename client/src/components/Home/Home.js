@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { MainContext } from '../../mainContext'
 import { UsersContext } from '../../usersContext'
+import { SocketContext } from '../../socketContext'
 import userRooms from '../../userRooms';
 import axios from 'axios';
 
@@ -12,6 +13,7 @@ const Home = () => {
     const { name, setName, room, setRoom } = useContext(MainContext)
     const history = useHistory()
     const { setUsers } = useContext(UsersContext)
+    const socket = useContext(SocketContext)
 
     const setUser = (name) => {
         setName(name);

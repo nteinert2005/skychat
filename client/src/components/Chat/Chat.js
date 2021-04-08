@@ -36,6 +36,10 @@ const Chat = () => {
                 //console.log("users");
                 setUsers(data.userMap);
             })
+
+            socket.on('new_user', data => {
+                console.log(data);
+            });
         }
     }, []);
 

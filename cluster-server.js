@@ -16,9 +16,7 @@ const { addUser, getUser, deleteUser, getUsers, getAllUsers, findBySocketID } = 
 const crypto = require('crypto');
 
 const {
-    client,
-    setRedis,
-    getRedis
+    client
 } = require('./redisSocket');
 
 const apiRouter = require('./routes/apiRouter');
@@ -30,6 +28,8 @@ cluster.schedulingPolicy = cluster.SCHED_RR;
 
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running on port ${PORT}`);
+
+    client.set('storedUsers', JSON.stringify([]));
 
     const httpServer = http.createServer(app);
     setupMaster(httpServer, {
@@ -80,31 +80,35 @@ if (cluster.isMaster) {
     io.on("connection", (socket) => {
         //console.log(`${cluster.worker.id} | connection | ${socket.id} | ${PORT}`);
         log_me(cluster.worker.id, "connection", socket.id, PORT)
-        setRedis();
         
         //console.log(`Socket connected on port ${PORT} on cluster: ${process.pid}`);
 
         socket.on('join', data => {
-            log_me(cluster.worker.id, `joined: ${data.defaultRoom}`, socket.id, PORT);
-            //console.log(`Socket joined the chat room: ${data.defaultRoom}`);
-            const { user, err } = addUser(socket.id, data.username, data.defaultRoom);
-            var userMap = getAllUsers();
+            client.get('storedUsers', (error, users) => {
+                if(error) throw error;
+                console.log('inside of client');
+                var tempUsers = JSON.parse(users);
+                const { user, err } = addUser(socket.id, data.username, data.defaultRoom);
+                tempUsers.push(user);
+                client.set('storedUsers', JSON.stringify(tempUsers));
 
-            io.sockets.emit('new_user', {
-                user_join : true
-            });
+                io.sockets.emit('new_user', {
+                    user_join: true,
+                    userlist: tempUsers
+                });
+            }) 
+        });
 
 
-
-            for(var i = 0; i < userMap.length; i++){
-                if(userMap[i].room == data.defaultRoom){
-                    console.log(data.defaultRoom);
-                    io.to(userMap[i].id).emit('user_join', {
-                        userMap: getUsers(data.defaultRoom)
-                    })
-                }
-            }
-        })
+        //     for(var i = 0; i < userMap.length; i++){
+        //         if(userMap[i].room == data.defaultRoom){
+        //             console.log(data.defaultRoom);
+        //             io.to(userMap[i].id).emit('user_join', {
+        //                 userMap: getUsers(data.defaultRoom)
+        //             })
+        //         }
+        //     }
+        // })
 
         socket.on('disconnect', () => {
             log_me(cluster.worker.id, 'disconnected', socket.id, PORT);

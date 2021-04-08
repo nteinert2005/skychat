@@ -34,7 +34,12 @@ const Chat = () => {
                 //console.log(data.userMap);
                 //users = data.userMap;
                 //console.log("users");
-                setUsers(data.userMap);
+                //console.log(data);
+                var userList = JSON.parse(data.userList);
+                //console.log(userList);
+                // userList = array of users 
+                console.log(userList);
+                setUsers(userList);
             })
 
             socket.on('new_user', data => {

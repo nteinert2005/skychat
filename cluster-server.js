@@ -16,7 +16,12 @@ const { addUser, getUser, deleteUser, getUsers, getAllUsers, findBySocketID } = 
 const crypto = require('crypto');
 
 const {
-    client
+    client,
+    getRedisUsers,
+    setRedisUsers,
+    addRedisUser,
+    findRedisUser,
+    deleteRedisUser
 } = require('./redisSocket');
 
 const apiRouter = require('./routes/apiRouter');
@@ -29,22 +34,23 @@ cluster.schedulingPolicy = cluster.SCHED_RR;
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running on port ${PORT}`);
 
-    client.set('storedUsers', JSON.stringify([]));
+    var tempUsers = [];
+    setRedisUsers(tempUsers).then(function(result){
+        const httpServer = http.createServer(app);
+        setupMaster(httpServer, {
+            loadBalancingMethod: "round-robin", // either "random", "round-robin" or "least-connection"
+        });
 
-    const httpServer = http.createServer(app);
-    setupMaster(httpServer, {
-        loadBalancingMethod: "round-robin", // either "random", "round-robin" or "least-connection"
-    });
+        for (let i = 0; i < numCPUs; i++) {
+            cluster.fork();
+        }
+                
 
-    for (let i = 0; i < numCPUs; i++) {
-        cluster.fork();
-    }
-            
-
-    cluster.on("exit", (worker) => {
-        console.log(`Worker ${worker.process.pid} died`);
-        cluster.fork();
-    });
+        cluster.on("exit", (worker) => {
+            console.log(`Worker ${worker.process.pid} died`);
+            cluster.fork();
+        });
+    });    
 } else {
     console.log(`Worker ${process.pid} started`);
 
@@ -84,19 +90,35 @@ if (cluster.isMaster) {
         //console.log(`Socket connected on port ${PORT} on cluster: ${process.pid}`);
 
         socket.on('join', data => {
-            client.get('storedUsers', (error, users) => {
-                if(error) throw error;
-                console.log('inside of client');
-                var tempUsers = JSON.parse(users);
-                const { user, err } = addUser(socket.id, data.username, data.defaultRoom);
-                tempUsers.push(user);
-                client.set('storedUsers', JSON.stringify(tempUsers));
+            const { user, err } = addUser(socket.id, data.username, data.defaultRoom);
+            let newUser = addRedisUser(user);
+        
+            newUser.then(function(result1){
+                //console.log(result1);
+                let userArray = getRedisUsers();
+                userArray.then(function(result2){
+                    var temp = JSON.parse(result2.users);
+                    
+                    io.sockets.emit('new_user', {
+                        userList: temp
+                    });
+                })
+            });
 
-                io.sockets.emit('new_user', {
-                    user_join: true,
-                    userlist: tempUsers
-                });
-            }) 
+            
+            // client.get('storedUsers', (error, users) => {
+            //     if(error) throw error;
+            //     console.log('inside of client');
+            //     var tempUsers = JSON.parse(users);
+            //     const { user, err } = addUser(socket.id, data.username, data.defaultRoom);
+            //     tempUsers.push(user);
+            //     client.set('storedUsers', JSON.stringify(tempUsers));
+
+            //     io.sockets.emit('new_user', {
+            //         user_join: true,
+            //         userlist: tempUsers
+            //     });
+            // }) 
         });
 
 

@@ -15,6 +15,12 @@ const cors = require('cors');
 const { addUser, getUser, deleteUser, getUsers, getAllUsers, findBySocketID } = require('./users');
 const crypto = require('crypto');
 
+const {
+    client,
+    setRedis,
+    getRedis
+} = require('./redisSocket');
+
 const apiRouter = require('./routes/apiRouter');
 const authRouter = require('./routes/authRouter');
 
@@ -74,6 +80,7 @@ if (cluster.isMaster) {
     io.on("connection", (socket) => {
         //console.log(`${cluster.worker.id} | connection | ${socket.id} | ${PORT}`);
         log_me(cluster.worker.id, "connection", socket.id, PORT)
+        setRedis();
         
         //console.log(`Socket connected on port ${PORT} on cluster: ${process.pid}`);
 
@@ -86,6 +93,8 @@ if (cluster.isMaster) {
             io.sockets.emit('new_user', {
                 user_join : true
             });
+
+
 
             for(var i = 0; i < userMap.length; i++){
                 if(userMap[i].room == data.defaultRoom){
@@ -136,7 +145,19 @@ if (cluster.isMaster) {
             res.sendFile(path.join(__dirname+"/client/build/index.html"))
         })
     } else {
-        console.log('--- development ---');
+        app.get('/users',(req, res) => {
+            try {
+                client.get('storedUsers', async (err, users) => {
+                    res.status(200).send({
+                        users: JSON.parse(users)
+                    });
+                }) 
+            } catch(err) {
+                res.status(500).send({
+                    message: err.message
+                })
+            }
+        })
         app.get('/', (req, res) => {
             app.use(express.static('client/build'));
             res.sendFile(path.join(__dirname+"/client/build/index.html"))

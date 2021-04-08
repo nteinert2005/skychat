@@ -29,6 +29,7 @@ const Home = () => {
             }
         }
     }
+    
 
 
     const handleClick = (e) => {

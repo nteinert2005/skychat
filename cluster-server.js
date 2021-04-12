@@ -16,20 +16,24 @@ const { addUser, getUser, deleteUser, getUsers, getAllUsers, findBySocketID } = 
 const crypto = require('crypto');
 
 const {
-    client,
+    createRedisClient,
     getRedisUsers,
     setRedisUsers,
     addRedisUser,
     findRedisUser,
     deleteRedisUser
-} = require('./redisSocket');
+} = require('@skywritermd/socketredis');
 
 const apiRouter = require('./routes/apiRouter');
 const authRouter = require('./routes/authRouter');
 
 // for windows running only
 cluster.schedulingPolicy = cluster.SCHED_RR;
-
+const client = createRedisClient(
+    'ec2-54-208-89-233.compute-1.amazonaws.com',
+    11039,
+    'p551765675b247d78dddf9b57847dd89db0af13d4ab51b86fdf47f976ad7a365a'
+);
 
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running on port ${PORT}`);

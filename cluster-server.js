@@ -142,6 +142,20 @@ if (cluster.isMaster) {
             var oldUser = getUser(socket.id);
             var user = deleteUser(socket.id);
 
+            var deleteUser = deleteRedisUser(oldUser);
+
+            deleteUser.then(function(results){
+                //console.log(result1);
+                let userArray = getRedisUsers();
+                userArray.then(function(result2){
+                    var temp = JSON.parse(result2.users);
+                    
+                    io.sockets.emit('new_user', {
+                        userList: temp
+                    });
+                })
+            })
+
             io.emit('user_leave', {
                 userMap: getUsers()
             })

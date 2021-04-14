@@ -22,7 +22,7 @@ const {
     addRedisUser,
     findRedisUser,
     deleteRedisUser
-} = require('@skywritermd/socketredis');
+} = require('./socketRedis');
 
 const apiRouter = require('./routes/apiRouter');
 const authRouter = require('./routes/authRouter');

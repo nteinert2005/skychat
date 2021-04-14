@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@skywritermd/socketredis": "^1.0.1",
+    "@skywritermd/socketredis": "^1.0.3",
     "@socket.io/sticky": "^1.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",

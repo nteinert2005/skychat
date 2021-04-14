@@ -42,6 +42,12 @@ const Chat = () => {
                 setUsers(userList);
             })
 
+            socket.on('user_deleted', data => {
+                var userList = JSON.parse(data.userList);
+                console.log(userList);
+                setUsers(userList);
+            })
+
             socket.on('new_user', data => {
                 console.log(data);
             });

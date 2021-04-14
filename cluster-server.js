@@ -140,7 +140,7 @@ if (cluster.isMaster) {
             log_me(cluster.worker.id, 'disconnected', socket.id, PORT);
             //console.log(`Disconnected: ${socket.id}`);
             var oldUser = getUser(socket.id);
-            var user = deleteUser(socket.id);
+            //var user = deleteUser(socket.id);
 
             var deleteUser = deleteRedisUser(oldUser);
 

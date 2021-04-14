@@ -150,7 +150,7 @@ if (cluster.isMaster) {
                 userArray.then(function(result2){
                     var temp = JSON.parse(result2.users);
                     
-                    io.sockets.emit('new_user', {
+                    io.sockets.emit('user_deleted', {
                         userList: temp
                     });
                 })
